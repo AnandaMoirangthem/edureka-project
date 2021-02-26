@@ -24,7 +24,7 @@ node {
            
            stage('git checkout'){
                echo 'checking out code from github repository'
-               git 'https://github.com/shubhamkushwah123/docker-demo.git'
+               git 'https://github.com/AnandaMoirangthem/edureka-project.git'
            }
            stage('compile Test and Package') {
              echo 'Compile code, Testing and Packaging'
@@ -44,45 +44,45 @@ node {
            
             stage('Build docker image') {
                 echo 'building docker image from Dockerfile'
-                sh "${dockerCMD} build -t shubhamkushwah123/addressbook:1.0 ."
+                sh "${dockerCMD} build -t anandamoirangthem/addressbook:1.0 ."
             }
             
             stage('Push docker image') {
                 echo 'Authenticating user to push image on Docker hub'
                 withCredentials([string(credentialsId: 'dockerPwd', variable: 'dockerHubPwd')]) {
-            //    sh "${dockerCMD} login -u shubhamkushwah123 -p ${dockerHubPwd}"
+                sh "${dockerCMD} login -u anandamoirangthem -p ${dockerHubPwd}"
                 }
                 echo 'pushing image on docker hub'
-             //  sh "${dockerCMD} push shubhamkushwah123/addressbook:1.0"
+                sh "${dockerCMD} push anandamoirangthem/addressbook:1.0"
              }
               
-            stage('Run Apt Update'){
-              echo 'establishing ssh connection to run apt update'
-              sshagent(['aws-ubuntu']) {
-                   sh "ssh -o StrictHostKeyChecking=no ${user}@${ipAddress} ${aptUpdate}" 
-                  }
-            }  
+           // stage('Run Apt Update'){
+           //   echo 'establishing ssh connection to run apt update'
+           //   sshagent(['aws-ubuntu']) {
+           //        sh "ssh -o StrictHostKeyChecking=no ${user}@${ipAddress} ${aptUpdate}" 
+           //       }
+           // }  
             
-            stage('Docker  Install'){
-                echo 'Installing docker on aws Instance'
-                 sshagent(['aws-ubuntu']) {
-                   sh "ssh -o StrictHostKeyChecking=no ${user}@${ipAddress} ${dockerInstall}" 
-               }
-            }
+           // stage('Docker  Install'){
+           //     echo 'Installing docker on aws Instance'
+           //      sshagent(['aws-ubuntu']) {
+           //        sh "ssh -o StrictHostKeyChecking=no ${user}@${ipAddress} ${dockerInstall}" 
+           //    }
+           // }
             
-            stage('Docker Start'){
-                echo 'Starting docker on aws Instance'
-                 sshagent(['aws-ubuntu']) {
-                   sh "ssh -o StrictHostKeyChecking=no ${user}@${ipAddress} ${dockerStart}" 
-              }
-            }
+           // stage('Docker Start'){
+           //     echo 'Starting docker on aws Instance'
+           //      sshagent(['aws-ubuntu']) {
+           //        sh "ssh -o StrictHostKeyChecking=no ${user}@${ipAddress} ${dockerStart}" 
+           //   }
+           // }
             
-            stage('Deploy Application'){
-                echo 'Deploying Application on aws Instance'
-              sshagent(['aws-ubuntu']) {
+           // stage('Deploy Application'){
+           //     echo 'Deploying Application on aws Instance'
+           //   sshagent(['aws-ubuntu']) {
 
-                   sh "ssh -o StrictHostKeyChecking=no ${user}@${ipAddress} ${dockerRun}" 
-               }
-            }  
+           //        sh "ssh -o StrictHostKeyChecking=no ${user}@${ipAddress} ${dockerRun}" 
+           //    }
+           // }  
     } // node end
 
